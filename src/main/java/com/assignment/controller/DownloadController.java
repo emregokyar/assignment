@@ -3,7 +3,6 @@ package com.assignment.controller;
 import com.assignment.util.FileDownloadUtil;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,7 +32,7 @@ public class DownloadController {
         }
 
         if (resource == null) {
-            return new ResponseEntity<>("File not found", HttpStatus.NOT_FOUND);
+            return ResponseEntity.notFound().build();
         }
         String contentType = "application/octet-stream";
         String headerValue = "attachment; filename=\"" + resource.getFilename() + "\"";

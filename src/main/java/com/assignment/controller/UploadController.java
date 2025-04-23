@@ -5,6 +5,8 @@ import com.assignment.entity.Package;
 import com.assignment.entity.Version;
 import com.assignment.service.AuthorService;
 import com.assignment.util.FileUploadUtil;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,12 +24,12 @@ public class UploadController {
     }
 
     @PostMapping("{author}/{pck}/{version}")
-    public Author uploadPck(@PathVariable Integer author,
-                            @PathVariable String pck,
-                            @PathVariable MultipartFile version) {
+    public ResponseEntity<?> uploadPck(@PathVariable Integer author,
+                                       @PathVariable String pck,
+                                       @PathVariable MultipartFile version) {
 
         if (version.isEmpty() || version.getOriginalFilename() == null) {
-            throw new RuntimeException("Uploaded file is empty or invalid");
+            return ResponseEntity.badRequest().build();
         }
         String versionName = StringUtils.cleanPath(version.getOriginalFilename());
 
@@ -54,11 +56,14 @@ public class UploadController {
         try {
             String uploadDir = "company/" + ath.getId() + "/" + tempPck.getName() + "/" + versionNam;
             var a = FileUploadUtil.saveFile(uploadDir, version);
-            if (!a) throw new RuntimeException("Not a valid json data");
+            if (!a) return ResponseEntity.internalServerError().build();
 
         } catch (IOException e) {
-            throw new RuntimeException("Failed to save file", e);
+            return ResponseEntity.internalServerError().build();
         }
-        return savedAuthor;
+        return ResponseEntity
+                .ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION)
+                .body(savedAuthor);
     }
 }
