@@ -1,39 +1,47 @@
 package com.assignment.controller;
 
-import com.assignment.entity.Package;
-import com.assignment.entity.Version;
-import com.assignment.service.AuthorService;
-import com.assignment.service.PackageService;
-import com.assignment.service.VersionService;
+import com.assignment.util.FileDownloadUtil;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Objects;
+import java.io.IOException;
 
 @RestController
 public class DownloadController {
-    private final VersionService versionService;
-    private final PackageService packageService;
-    private final AuthorService authorService;
 
-    public DownloadController(VersionService versionService, PackageService packageService, AuthorService authorService) {
-        this.versionService = versionService;
-        this.packageService = packageService;
-        this.authorService = authorService;
+    public DownloadController() {
     }
 
-    @GetMapping("/{pck}/{version}")
-    public Version getVersion(@PathVariable String pck, @PathVariable String version) {
-        Package tempPck = packageService.findByPackageName(pck);
-        for (var p : tempPck.getVersions()) {
-            if (Objects.equals(p.getName(), version)) return versionService.getVersionByName(version);
+    @GetMapping("{author}/{pck}/{version}/{fileName}")
+    public ResponseEntity<?> downloadResume(@PathVariable String author,
+                                            @PathVariable String pck,
+                                            @PathVariable String version,
+                                            @PathVariable String fileName) {
+        FileDownloadUtil fileDownloadUtil = new FileDownloadUtil();
+        Resource resource = null;
+
+        try {
+            resource = fileDownloadUtil.getfFileAsResource(("company/" + author + "/" + pck + "/" + version), fileName);
+        } catch (IOException e) {
+            return ResponseEntity.badRequest().build();
         }
-        return null;
-    }
 
-    @GetMapping("/{pck}")
-    public Package getPck(@PathVariable String pck) {
-        return packageService.findByPackageName(pck);
+        if (resource == null) {
+            return new ResponseEntity<>("File not found", HttpStatus.NOT_FOUND);
+        }
+        String contentType = "application/octet-stream";
+        String headerValue = "attachment; filename=\"" + resource.getFilename() + "\"";
+
+        return ResponseEntity
+                .ok()
+                .contentType(MediaType.parseMediaType(contentType))
+                .header(HttpHeaders.CONTENT_DISPOSITION, headerValue)
+                .body(resource);
     }
 }

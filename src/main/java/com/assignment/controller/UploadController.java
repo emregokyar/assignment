@@ -49,8 +49,10 @@ public class UploadController {
         vrs.setPackageId(tempPck);
 
         Author savedAuthor = authorService.saveAuthor(ath);
+
+        String versionNam = vrs.getName().replace(".zip", "");
         try {
-            String uploadDir = "company/" + ath.getFullName() + "/" + tempPck.getName() + "/" + vrs.getName();
+            String uploadDir = "company/" + ath.getId() + "/" + tempPck.getName() + "/" + versionNam;
             var a = FileUploadUtil.saveFile(uploadDir, version);
             if (!a) throw new RuntimeException("Not a valid json data");
 
