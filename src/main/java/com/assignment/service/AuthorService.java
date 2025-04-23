@@ -14,8 +14,8 @@ public class AuthorService {
         this.authorRepository = authorRepository;
     }
 
-    public void saveAuthor(Author author) {
-        authorRepository.save(author);
+    public Author saveAuthor(Author author) {
+        return authorRepository.save(author);
     }
 
     public void deleteAuthor(Author author) {
@@ -26,4 +26,11 @@ public class AuthorService {
         return authorRepository.findById(id).orElseThrow(() ->
                 new RuntimeException("Can not find an author with this id"));
     }
+
+    public Author findAuthorByName(String name) {
+        return authorRepository.findByFullName(name).orElseThrow(() ->
+                new RuntimeException("Can not find an author with this id"));
+    }
+
+
 }

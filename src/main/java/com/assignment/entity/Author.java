@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -25,4 +26,11 @@ public class Author {
     @OneToMany(targetEntity = Package.class, mappedBy = "authorId", cascade = CascadeType.ALL)
     @JsonManagedReference
     private List<Package> packages;
+
+    public void addPck(Package pck) {
+        if (packages == null) {
+            packages = new ArrayList<>();
+        }
+        packages.add(pck);
+    }
 }

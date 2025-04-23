@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -31,4 +32,11 @@ public class Package {
     @OneToMany(targetEntity = Version.class, mappedBy = "packageId", cascade = CascadeType.ALL)
     @JsonManagedReference
     private List<Version> versions;
+
+    public void addVersion(Version version) {
+        if (versions == null) {
+            versions = new ArrayList<>();
+        }
+        versions.add(version);
+    }
 }
