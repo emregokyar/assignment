@@ -1,5 +1,6 @@
 package com.assignment.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -22,5 +23,6 @@ public class Author {
     private String fullName;
 
     @OneToMany(targetEntity = Package.class, mappedBy = "authorId", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private List<Package> packages;
 }

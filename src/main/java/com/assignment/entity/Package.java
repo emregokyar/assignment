@@ -1,5 +1,7 @@
 package com.assignment.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -23,8 +25,10 @@ public class Package {
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "authorId", referencedColumnName = "id")
+    @JsonBackReference
     private Author authorId;
 
     @OneToMany(targetEntity = Version.class, mappedBy = "packageId", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private List<Version> versions;
 }
