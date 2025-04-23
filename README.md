@@ -24,7 +24,7 @@ This is a Spring Boot-based web application for uploading and downloading softwa
 Make sure to update `application.properties` with your PostgreSQL credentials:
 
 ```properties
-spring.datasource.url=jdbc:postgresql://localhost:5432/your_database
+spring.datasource.url=jdbc:postgresql://localhost:5432/assignment
 spring.datasource.username=your_username
 spring.datasource.password=your_password
 
@@ -43,23 +43,6 @@ spring.jpa.show-sql=true
 1. Users send a request with the package author/name/version.
 2. The file is fetched from local storage.
 3. The file is returned as a download response.
-
-## 🧪 How to Run
-
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/yourusername/package-management-app.git
-   cd package-management-app
-   ```
-
-2. Set up PostgreSQL and update `application.properties`.
-
-3. Run the application:
-   ```bash
-   ./mvnw spring-boot:run
-   ```
-
-4. Access it via `http://localhost:8080`.
 
 
 ## 👨‍💼 Author
